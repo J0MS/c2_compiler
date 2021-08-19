@@ -1,0 +1,2041 @@
+Gramática
+
+    0 $accept: program $end
+
+    1 program: declarations functions
+
+    2 declarations: declarations declaration
+    3             | %empty
+
+    4 declaration: decl_var
+    5            | decl_struct
+
+    6 decl_var: type list_var PYC
+
+    7 list_var: list_var COMA var
+    8         | var
+
+    9 var: ID
+
+   10 type: base arreglo
+
+   11 base: INT
+   12     | VOID
+
+   13 arreglo: LCOR NUMERO RCOR arreglo
+   14        | %empty
+
+   15 decl_struct: STRUCT LKEY body_struct RKEY list_var PYC
+
+   16 body_struct: body_struct def_mem
+   17            | def_mem
+
+   18 def_mem: base ID PYC
+
+   19 functions: functions function
+   20          | function
+
+   21 function: FUNC base ID LPAR list_args RPAR LKEY local_decls bloqueSentencias RKEY
+
+   22 list_args: args
+   23          | %empty
+
+   24 args: args COMA arg
+   25     | arg
+
+   26 arg: base ID
+
+   27 local_decls: local_decls local_decl
+   28            | %empty
+
+   29 local_decl: base local_list PYC
+
+   30 local_list: local_list COMA local
+   31           | local
+
+   32 local: ID
+
+   33 bloqueSentencias: sentencias
+   34                 | %empty
+
+   35 sentencias: sentencias sentencia
+   36           | sentencia
+
+   37 sentencia: sentIf
+   38          | sentWhile
+   39          | sentAsig
+   40          | sentPutw
+   41          | sentPuts
+   42          | sentBreak
+   43          | sentProc
+   44          | sentReturn
+
+   45 sentReturn: RETURN expresion PYC
+
+   46 sentProc: ID LPAR list_params RPAR PYC
+
+   47 list_params: params
+   48            | %empty
+
+   49 params: params COMA param
+   50       | param
+
+   51 param: expresion
+
+   52 expresion: expresion MAS expresion
+   53          | expresion MENOS expresion
+   54          | expresion MUL expresion
+   55          | expresion DIV expresion
+   56          | expresion MOD expresion
+   57          | LPAR expresion RPAR
+   58          | NUMERO
+   59          | ID complemento
+
+   60 complemento: DOT ID
+   61            | array
+   62            | LPAR list_params RPAR
+   63            | %empty
+
+   64 array: array LCOR expresion RCOR
+   65      | LCOR expresion RCOR
+
+   66 condicion: condicion OR condicion
+   67          | condicion AND condicion
+   68          | expresion EQUAL expresion
+   69          | expresion DISTINCT expresion
+   70          | expresion GT expresion
+   71          | expresion LT expresion
+   72          | expresion GTE expresion
+   73          | expresion LTE expresion
+   74          | NOT condicion
+   75          | LPAR condicion RPAR
+
+   76 sentIf: IF LPAR condicion RPAR bloqueOSentencia sentElse
+
+   77 sentElse: ELSE bloqueOSentencia
+   78         | %empty
+
+   79 bloqueOSentencia: LKEY bloqueSentencias RKEY
+   80                 | sentencia
+
+   81 sentWhile: WHILE LPAR condicion RPAR bloqueOSentencia
+
+   82 sentAsig: left_part ASIG expresion PYC
+
+   83 left_part: ID
+   84          | ID array
+   85          | ID DOT ID
+
+   86 sentPutw: PRINT LPAR expresion RPAR PYC
+
+   87 sentPuts: PRINT LPAR STRING RPAR PYC
+
+   88 sentBreak: BREAK PYC
+
+
+Terminales con las reglas donde aparecen
+
+$end (0) 0
+error (256)
+ID (258) 9 18 21 26 32 46 59 60 83 84 85
+NUMERO (259) 13 58
+STRING (260) 87
+IF (261) 76
+WHILE (262) 81
+PRINT (263) 86 87
+BREAK (264) 88
+FUNC (265) 21
+INT (266) 11
+VOID (267) 12
+RETURN (268) 45
+STRUCT (269) 15
+LKEY (270) 15 21 79
+RKEY (271) 15 21 79
+PYC (272) 6 15 18 29 45 46 82 86 87 88
+COMA (273) 7 24 30 49
+ASIG (274) 82
+OR (275) 66
+AND (276) 67
+EQUAL (277) 68
+DISTINCT (278) 69
+LT (279) 71
+GT (280) 70
+LTE (281) 73
+GTE (282) 72
+MAS (283) 52
+MENOS (284) 53
+MUL (285) 54
+DIV (286) 55
+MOD (287) 56
+LCOR (288) 13 64 65
+RCOR (289) 13 64 65
+NOT (290) 74
+DOT (291) 60 85
+LPAR (292) 21 46 57 62 75 76 81 86 87
+RPAR (293) 21 46 57 62 75 76 81 86 87
+IFX (294)
+ELSE (295) 77
+
+
+No terminales con las reglas donde aparecen
+
+$accept (41)
+    en la izquierda: 0
+program (42)
+    en la izquierda: 1, en la derecha: 0
+declarations (43)
+    en la izquierda: 2 3, en la derecha: 1 2
+declaration (44)
+    en la izquierda: 4 5, en la derecha: 2
+decl_var (45)
+    en la izquierda: 6, en la derecha: 4
+list_var (46)
+    en la izquierda: 7 8, en la derecha: 6 7 15
+var (47)
+    en la izquierda: 9, en la derecha: 7 8
+type (48)
+    en la izquierda: 10, en la derecha: 6
+base (49)
+    en la izquierda: 11 12, en la derecha: 10 18 21 26 29
+arreglo (50)
+    en la izquierda: 13 14, en la derecha: 10 13
+decl_struct (51)
+    en la izquierda: 15, en la derecha: 5
+body_struct (52)
+    en la izquierda: 16 17, en la derecha: 15 16
+def_mem (53)
+    en la izquierda: 18, en la derecha: 16 17
+functions (54)
+    en la izquierda: 19 20, en la derecha: 1 19
+function (55)
+    en la izquierda: 21, en la derecha: 19 20
+list_args (56)
+    en la izquierda: 22 23, en la derecha: 21
+args (57)
+    en la izquierda: 24 25, en la derecha: 22 24
+arg (58)
+    en la izquierda: 26, en la derecha: 24 25
+local_decls (59)
+    en la izquierda: 27 28, en la derecha: 21 27
+local_decl (60)
+    en la izquierda: 29, en la derecha: 27
+local_list (61)
+    en la izquierda: 30 31, en la derecha: 29 30
+local (62)
+    en la izquierda: 32, en la derecha: 30 31
+bloqueSentencias (63)
+    en la izquierda: 33 34, en la derecha: 21 79
+sentencias (64)
+    en la izquierda: 35 36, en la derecha: 33 35
+sentencia (65)
+    en la izquierda: 37 38 39 40 41 42 43 44, en la derecha: 35 36
+    80
+sentReturn (66)
+    en la izquierda: 45, en la derecha: 44
+sentProc (67)
+    en la izquierda: 46, en la derecha: 43
+list_params (68)
+    en la izquierda: 47 48, en la derecha: 46 62
+params (69)
+    en la izquierda: 49 50, en la derecha: 47 49
+param (70)
+    en la izquierda: 51, en la derecha: 49 50
+expresion (71)
+    en la izquierda: 52 53 54 55 56 57 58 59, en la derecha: 45 51
+    52 53 54 55 56 57 64 65 68 69 70 71 72 73 82 86
+complemento (72)
+    en la izquierda: 60 61 62 63, en la derecha: 59
+array (73)
+    en la izquierda: 64 65, en la derecha: 61 64 84
+condicion (74)
+    en la izquierda: 66 67 68 69 70 71 72 73 74 75, en la derecha:
+    66 67 74 75 76 81
+sentIf (75)
+    en la izquierda: 76, en la derecha: 37
+sentElse (76)
+    en la izquierda: 77 78, en la derecha: 76
+bloqueOSentencia (77)
+    en la izquierda: 79 80, en la derecha: 76 77 81
+sentWhile (78)
+    en la izquierda: 81, en la derecha: 38
+sentAsig (79)
+    en la izquierda: 82, en la derecha: 39
+left_part (80)
+    en la izquierda: 83 84 85, en la derecha: 82
+sentPutw (81)
+    en la izquierda: 86, en la derecha: 40
+sentPuts (82)
+    en la izquierda: 87, en la derecha: 41
+sentBreak (83)
+    en la izquierda: 88, en la derecha: 42
+
+
+Estado 0
+
+    0 $accept: . program $end
+
+    $default  reduce usando la regla 3 (declarations)
+
+    program       ir al estado 1
+    declarations  ir al estado 2
+
+
+Estado 1
+
+    0 $accept: program . $end
+
+    $end  desplazar e ir al estado 3
+
+
+Estado 2
+
+    1 program: declarations . functions
+    2 declarations: declarations . declaration
+
+    FUNC    desplazar e ir al estado 4
+    INT     desplazar e ir al estado 5
+    VOID    desplazar e ir al estado 6
+    STRUCT  desplazar e ir al estado 7
+
+    declaration  ir al estado 8
+    decl_var     ir al estado 9
+    type         ir al estado 10
+    base         ir al estado 11
+    decl_struct  ir al estado 12
+    functions    ir al estado 13
+    function     ir al estado 14
+
+
+Estado 3
+
+    0 $accept: program $end .
+
+    $default  aceptar
+
+
+Estado 4
+
+   21 function: FUNC . base ID LPAR list_args RPAR LKEY local_decls bloqueSentencias RKEY
+
+    INT   desplazar e ir al estado 5
+    VOID  desplazar e ir al estado 6
+
+    base  ir al estado 15
+
+
+Estado 5
+
+   11 base: INT .
+
+    $default  reduce usando la regla 11 (base)
+
+
+Estado 6
+
+   12 base: VOID .
+
+    $default  reduce usando la regla 12 (base)
+
+
+Estado 7
+
+   15 decl_struct: STRUCT . LKEY body_struct RKEY list_var PYC
+
+    LKEY  desplazar e ir al estado 16
+
+
+Estado 8
+
+    2 declarations: declarations declaration .
+
+    $default  reduce usando la regla 2 (declarations)
+
+
+Estado 9
+
+    4 declaration: decl_var .
+
+    $default  reduce usando la regla 4 (declaration)
+
+
+Estado 10
+
+    6 decl_var: type . list_var PYC
+
+    ID  desplazar e ir al estado 17
+
+    list_var  ir al estado 18
+    var       ir al estado 19
+
+
+Estado 11
+
+   10 type: base . arreglo
+
+    LCOR  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 14 (arreglo)
+
+    arreglo  ir al estado 21
+
+
+Estado 12
+
+    5 declaration: decl_struct .
+
+    $default  reduce usando la regla 5 (declaration)
+
+
+Estado 13
+
+    1 program: declarations functions .
+   19 functions: functions . function
+
+    FUNC  desplazar e ir al estado 4
+
+    $default  reduce usando la regla 1 (program)
+
+    function  ir al estado 22
+
+
+Estado 14
+
+   20 functions: function .
+
+    $default  reduce usando la regla 20 (functions)
+
+
+Estado 15
+
+   21 function: FUNC base . ID LPAR list_args RPAR LKEY local_decls bloqueSentencias RKEY
+
+    ID  desplazar e ir al estado 23
+
+
+Estado 16
+
+   15 decl_struct: STRUCT LKEY . body_struct RKEY list_var PYC
+
+    INT   desplazar e ir al estado 5
+    VOID  desplazar e ir al estado 6
+
+    base         ir al estado 24
+    body_struct  ir al estado 25
+    def_mem      ir al estado 26
+
+
+Estado 17
+
+    9 var: ID .
+
+    $default  reduce usando la regla 9 (var)
+
+
+Estado 18
+
+    6 decl_var: type list_var . PYC
+    7 list_var: list_var . COMA var
+
+    PYC   desplazar e ir al estado 27
+    COMA  desplazar e ir al estado 28
+
+
+Estado 19
+
+    8 list_var: var .
+
+    $default  reduce usando la regla 8 (list_var)
+
+
+Estado 20
+
+   13 arreglo: LCOR . NUMERO RCOR arreglo
+
+    NUMERO  desplazar e ir al estado 29
+
+
+Estado 21
+
+   10 type: base arreglo .
+
+    $default  reduce usando la regla 10 (type)
+
+
+Estado 22
+
+   19 functions: functions function .
+
+    $default  reduce usando la regla 19 (functions)
+
+
+Estado 23
+
+   21 function: FUNC base ID . LPAR list_args RPAR LKEY local_decls bloqueSentencias RKEY
+
+    LPAR  desplazar e ir al estado 30
+
+
+Estado 24
+
+   18 def_mem: base . ID PYC
+
+    ID  desplazar e ir al estado 31
+
+
+Estado 25
+
+   15 decl_struct: STRUCT LKEY body_struct . RKEY list_var PYC
+   16 body_struct: body_struct . def_mem
+
+    INT   desplazar e ir al estado 5
+    VOID  desplazar e ir al estado 6
+    RKEY  desplazar e ir al estado 32
+
+    base     ir al estado 24
+    def_mem  ir al estado 33
+
+
+Estado 26
+
+   17 body_struct: def_mem .
+
+    $default  reduce usando la regla 17 (body_struct)
+
+
+Estado 27
+
+    6 decl_var: type list_var PYC .
+
+    $default  reduce usando la regla 6 (decl_var)
+
+
+Estado 28
+
+    7 list_var: list_var COMA . var
+
+    ID  desplazar e ir al estado 17
+
+    var  ir al estado 34
+
+
+Estado 29
+
+   13 arreglo: LCOR NUMERO . RCOR arreglo
+
+    RCOR  desplazar e ir al estado 35
+
+
+Estado 30
+
+   21 function: FUNC base ID LPAR . list_args RPAR LKEY local_decls bloqueSentencias RKEY
+
+    INT   desplazar e ir al estado 5
+    VOID  desplazar e ir al estado 6
+
+    $default  reduce usando la regla 23 (list_args)
+
+    base       ir al estado 36
+    list_args  ir al estado 37
+    args       ir al estado 38
+    arg        ir al estado 39
+
+
+Estado 31
+
+   18 def_mem: base ID . PYC
+
+    PYC  desplazar e ir al estado 40
+
+
+Estado 32
+
+   15 decl_struct: STRUCT LKEY body_struct RKEY . list_var PYC
+
+    ID  desplazar e ir al estado 17
+
+    list_var  ir al estado 41
+    var       ir al estado 19
+
+
+Estado 33
+
+   16 body_struct: body_struct def_mem .
+
+    $default  reduce usando la regla 16 (body_struct)
+
+
+Estado 34
+
+    7 list_var: list_var COMA var .
+
+    $default  reduce usando la regla 7 (list_var)
+
+
+Estado 35
+
+   13 arreglo: LCOR NUMERO RCOR . arreglo
+
+    LCOR  desplazar e ir al estado 20
+
+    $default  reduce usando la regla 14 (arreglo)
+
+    arreglo  ir al estado 42
+
+
+Estado 36
+
+   26 arg: base . ID
+
+    ID  desplazar e ir al estado 43
+
+
+Estado 37
+
+   21 function: FUNC base ID LPAR list_args . RPAR LKEY local_decls bloqueSentencias RKEY
+
+    RPAR  desplazar e ir al estado 44
+
+
+Estado 38
+
+   22 list_args: args .
+   24 args: args . COMA arg
+
+    COMA  desplazar e ir al estado 45
+
+    $default  reduce usando la regla 22 (list_args)
+
+
+Estado 39
+
+   25 args: arg .
+
+    $default  reduce usando la regla 25 (args)
+
+
+Estado 40
+
+   18 def_mem: base ID PYC .
+
+    $default  reduce usando la regla 18 (def_mem)
+
+
+Estado 41
+
+    7 list_var: list_var . COMA var
+   15 decl_struct: STRUCT LKEY body_struct RKEY list_var . PYC
+
+    PYC   desplazar e ir al estado 46
+    COMA  desplazar e ir al estado 28
+
+
+Estado 42
+
+   13 arreglo: LCOR NUMERO RCOR arreglo .
+
+    $default  reduce usando la regla 13 (arreglo)
+
+
+Estado 43
+
+   26 arg: base ID .
+
+    $default  reduce usando la regla 26 (arg)
+
+
+Estado 44
+
+   21 function: FUNC base ID LPAR list_args RPAR . LKEY local_decls bloqueSentencias RKEY
+
+    LKEY  desplazar e ir al estado 47
+
+
+Estado 45
+
+   24 args: args COMA . arg
+
+    INT   desplazar e ir al estado 5
+    VOID  desplazar e ir al estado 6
+
+    base  ir al estado 36
+    arg   ir al estado 48
+
+
+Estado 46
+
+   15 decl_struct: STRUCT LKEY body_struct RKEY list_var PYC .
+
+    $default  reduce usando la regla 15 (decl_struct)
+
+
+Estado 47
+
+   21 function: FUNC base ID LPAR list_args RPAR LKEY . local_decls bloqueSentencias RKEY
+
+    $default  reduce usando la regla 28 (local_decls)
+
+    local_decls  ir al estado 49
+
+
+Estado 48
+
+   24 args: args COMA arg .
+
+    $default  reduce usando la regla 24 (args)
+
+
+Estado 49
+
+   21 function: FUNC base ID LPAR list_args RPAR LKEY local_decls . bloqueSentencias RKEY
+   27 local_decls: local_decls . local_decl
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    INT     desplazar e ir al estado 5
+    VOID    desplazar e ir al estado 6
+    RETURN  desplazar e ir al estado 55
+
+    $default  reduce usando la regla 34 (bloqueSentencias)
+
+    base              ir al estado 56
+    local_decl        ir al estado 57
+    bloqueSentencias  ir al estado 58
+    sentencias        ir al estado 59
+    sentencia         ir al estado 60
+    sentReturn        ir al estado 61
+    sentProc          ir al estado 62
+    sentIf            ir al estado 63
+    sentWhile         ir al estado 64
+    sentAsig          ir al estado 65
+    left_part         ir al estado 66
+    sentPutw          ir al estado 67
+    sentPuts          ir al estado 68
+    sentBreak         ir al estado 69
+
+
+Estado 50
+
+   46 sentProc: ID . LPAR list_params RPAR PYC
+   83 left_part: ID .
+   84          | ID . array
+   85          | ID . DOT ID
+
+    LCOR  desplazar e ir al estado 70
+    DOT   desplazar e ir al estado 71
+    LPAR  desplazar e ir al estado 72
+
+    $default  reduce usando la regla 83 (left_part)
+
+    array  ir al estado 73
+
+
+Estado 51
+
+   76 sentIf: IF . LPAR condicion RPAR bloqueOSentencia sentElse
+
+    LPAR  desplazar e ir al estado 74
+
+
+Estado 52
+
+   81 sentWhile: WHILE . LPAR condicion RPAR bloqueOSentencia
+
+    LPAR  desplazar e ir al estado 75
+
+
+Estado 53
+
+   86 sentPutw: PRINT . LPAR expresion RPAR PYC
+   87 sentPuts: PRINT . LPAR STRING RPAR PYC
+
+    LPAR  desplazar e ir al estado 76
+
+
+Estado 54
+
+   88 sentBreak: BREAK . PYC
+
+    PYC  desplazar e ir al estado 77
+
+
+Estado 55
+
+   45 sentReturn: RETURN . expresion PYC
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 81
+
+
+Estado 56
+
+   29 local_decl: base . local_list PYC
+
+    ID  desplazar e ir al estado 82
+
+    local_list  ir al estado 83
+    local       ir al estado 84
+
+
+Estado 57
+
+   27 local_decls: local_decls local_decl .
+
+    $default  reduce usando la regla 27 (local_decls)
+
+
+Estado 58
+
+   21 function: FUNC base ID LPAR list_args RPAR LKEY local_decls bloqueSentencias . RKEY
+
+    RKEY  desplazar e ir al estado 85
+
+
+Estado 59
+
+   33 bloqueSentencias: sentencias .
+   35 sentencias: sentencias . sentencia
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    RETURN  desplazar e ir al estado 55
+
+    $default  reduce usando la regla 33 (bloqueSentencias)
+
+    sentencia   ir al estado 86
+    sentReturn  ir al estado 61
+    sentProc    ir al estado 62
+    sentIf      ir al estado 63
+    sentWhile   ir al estado 64
+    sentAsig    ir al estado 65
+    left_part   ir al estado 66
+    sentPutw    ir al estado 67
+    sentPuts    ir al estado 68
+    sentBreak   ir al estado 69
+
+
+Estado 60
+
+   36 sentencias: sentencia .
+
+    $default  reduce usando la regla 36 (sentencias)
+
+
+Estado 61
+
+   44 sentencia: sentReturn .
+
+    $default  reduce usando la regla 44 (sentencia)
+
+
+Estado 62
+
+   43 sentencia: sentProc .
+
+    $default  reduce usando la regla 43 (sentencia)
+
+
+Estado 63
+
+   37 sentencia: sentIf .
+
+    $default  reduce usando la regla 37 (sentencia)
+
+
+Estado 64
+
+   38 sentencia: sentWhile .
+
+    $default  reduce usando la regla 38 (sentencia)
+
+
+Estado 65
+
+   39 sentencia: sentAsig .
+
+    $default  reduce usando la regla 39 (sentencia)
+
+
+Estado 66
+
+   82 sentAsig: left_part . ASIG expresion PYC
+
+    ASIG  desplazar e ir al estado 87
+
+
+Estado 67
+
+   40 sentencia: sentPutw .
+
+    $default  reduce usando la regla 40 (sentencia)
+
+
+Estado 68
+
+   41 sentencia: sentPuts .
+
+    $default  reduce usando la regla 41 (sentencia)
+
+
+Estado 69
+
+   42 sentencia: sentBreak .
+
+    $default  reduce usando la regla 42 (sentencia)
+
+
+Estado 70
+
+   65 array: LCOR . expresion RCOR
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 88
+
+
+Estado 71
+
+   85 left_part: ID DOT . ID
+
+    ID  desplazar e ir al estado 89
+
+
+Estado 72
+
+   46 sentProc: ID LPAR . list_params RPAR PYC
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    $default  reduce usando la regla 48 (list_params)
+
+    list_params  ir al estado 90
+    params       ir al estado 91
+    param        ir al estado 92
+    expresion    ir al estado 93
+
+
+Estado 73
+
+   64 array: array . LCOR expresion RCOR
+   84 left_part: ID array .
+
+    LCOR  desplazar e ir al estado 94
+
+    $default  reduce usando la regla 84 (left_part)
+
+
+Estado 74
+
+   76 sentIf: IF LPAR . condicion RPAR bloqueOSentencia sentElse
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 97
+    condicion  ir al estado 98
+
+
+Estado 75
+
+   81 sentWhile: WHILE LPAR . condicion RPAR bloqueOSentencia
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 97
+    condicion  ir al estado 99
+
+
+Estado 76
+
+   86 sentPutw: PRINT LPAR . expresion RPAR PYC
+   87 sentPuts: PRINT LPAR . STRING RPAR PYC
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    STRING  desplazar e ir al estado 100
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 101
+
+
+Estado 77
+
+   88 sentBreak: BREAK PYC .
+
+    $default  reduce usando la regla 88 (sentBreak)
+
+
+Estado 78
+
+   59 expresion: ID . complemento
+
+    LCOR  desplazar e ir al estado 70
+    DOT   desplazar e ir al estado 102
+    LPAR  desplazar e ir al estado 103
+
+    $default  reduce usando la regla 63 (complemento)
+
+    complemento  ir al estado 104
+    array        ir al estado 105
+
+
+Estado 79
+
+   58 expresion: NUMERO .
+
+    $default  reduce usando la regla 58 (expresion)
+
+
+Estado 80
+
+   57 expresion: LPAR . expresion RPAR
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 106
+
+
+Estado 81
+
+   45 sentReturn: RETURN expresion . PYC
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+
+    PYC    desplazar e ir al estado 107
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+
+Estado 82
+
+   32 local: ID .
+
+    $default  reduce usando la regla 32 (local)
+
+
+Estado 83
+
+   29 local_decl: base local_list . PYC
+   30 local_list: local_list . COMA local
+
+    PYC   desplazar e ir al estado 113
+    COMA  desplazar e ir al estado 114
+
+
+Estado 84
+
+   31 local_list: local .
+
+    $default  reduce usando la regla 31 (local_list)
+
+
+Estado 85
+
+   21 function: FUNC base ID LPAR list_args RPAR LKEY local_decls bloqueSentencias RKEY .
+
+    $default  reduce usando la regla 21 (function)
+
+
+Estado 86
+
+   35 sentencias: sentencias sentencia .
+
+    $default  reduce usando la regla 35 (sentencias)
+
+
+Estado 87
+
+   82 sentAsig: left_part ASIG . expresion PYC
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 115
+
+
+Estado 88
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   65 array: LCOR expresion . RCOR
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+    RCOR   desplazar e ir al estado 116
+
+
+Estado 89
+
+   85 left_part: ID DOT ID .
+
+    $default  reduce usando la regla 85 (left_part)
+
+
+Estado 90
+
+   46 sentProc: ID LPAR list_params . RPAR PYC
+
+    RPAR  desplazar e ir al estado 117
+
+
+Estado 91
+
+   47 list_params: params .
+   49 params: params . COMA param
+
+    COMA  desplazar e ir al estado 118
+
+    $default  reduce usando la regla 47 (list_params)
+
+
+Estado 92
+
+   50 params: param .
+
+    $default  reduce usando la regla 50 (params)
+
+
+Estado 93
+
+   51 param: expresion .
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 51 (param)
+
+
+Estado 94
+
+   64 array: array LCOR . expresion RCOR
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 119
+
+
+Estado 95
+
+   74 condicion: NOT . condicion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 97
+    condicion  ir al estado 120
+
+
+Estado 96
+
+   57 expresion: LPAR . expresion RPAR
+   75 condicion: LPAR . condicion RPAR
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 121
+    condicion  ir al estado 122
+
+
+Estado 97
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   68 condicion: expresion . EQUAL expresion
+   69          | expresion . DISTINCT expresion
+   70          | expresion . GT expresion
+   71          | expresion . LT expresion
+   72          | expresion . GTE expresion
+   73          | expresion . LTE expresion
+
+    EQUAL     desplazar e ir al estado 123
+    DISTINCT  desplazar e ir al estado 124
+    LT        desplazar e ir al estado 125
+    GT        desplazar e ir al estado 126
+    LTE       desplazar e ir al estado 127
+    GTE       desplazar e ir al estado 128
+    MAS       desplazar e ir al estado 108
+    MENOS     desplazar e ir al estado 109
+    MUL       desplazar e ir al estado 110
+    DIV       desplazar e ir al estado 111
+    MOD       desplazar e ir al estado 112
+
+
+Estado 98
+
+   66 condicion: condicion . OR condicion
+   67          | condicion . AND condicion
+   76 sentIf: IF LPAR condicion . RPAR bloqueOSentencia sentElse
+
+    OR    desplazar e ir al estado 129
+    AND   desplazar e ir al estado 130
+    RPAR  desplazar e ir al estado 131
+
+
+Estado 99
+
+   66 condicion: condicion . OR condicion
+   67          | condicion . AND condicion
+   81 sentWhile: WHILE LPAR condicion . RPAR bloqueOSentencia
+
+    OR    desplazar e ir al estado 129
+    AND   desplazar e ir al estado 130
+    RPAR  desplazar e ir al estado 132
+
+
+Estado 100
+
+   87 sentPuts: PRINT LPAR STRING . RPAR PYC
+
+    RPAR  desplazar e ir al estado 133
+
+
+Estado 101
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   86 sentPutw: PRINT LPAR expresion . RPAR PYC
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+    RPAR   desplazar e ir al estado 134
+
+
+Estado 102
+
+   60 complemento: DOT . ID
+
+    ID  desplazar e ir al estado 135
+
+
+Estado 103
+
+   62 complemento: LPAR . list_params RPAR
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    $default  reduce usando la regla 48 (list_params)
+
+    list_params  ir al estado 136
+    params       ir al estado 91
+    param        ir al estado 92
+    expresion    ir al estado 93
+
+
+Estado 104
+
+   59 expresion: ID complemento .
+
+    $default  reduce usando la regla 59 (expresion)
+
+
+Estado 105
+
+   61 complemento: array .
+   64 array: array . LCOR expresion RCOR
+
+    LCOR  desplazar e ir al estado 94
+
+    $default  reduce usando la regla 61 (complemento)
+
+
+Estado 106
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   57          | LPAR expresion . RPAR
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+    RPAR   desplazar e ir al estado 137
+
+
+Estado 107
+
+   45 sentReturn: RETURN expresion PYC .
+
+    $default  reduce usando la regla 45 (sentReturn)
+
+
+Estado 108
+
+   52 expresion: expresion MAS . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 138
+
+
+Estado 109
+
+   53 expresion: expresion MENOS . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 139
+
+
+Estado 110
+
+   54 expresion: expresion MUL . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 140
+
+
+Estado 111
+
+   55 expresion: expresion DIV . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 141
+
+
+Estado 112
+
+   56 expresion: expresion MOD . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 142
+
+
+Estado 113
+
+   29 local_decl: base local_list PYC .
+
+    $default  reduce usando la regla 29 (local_decl)
+
+
+Estado 114
+
+   30 local_list: local_list COMA . local
+
+    ID  desplazar e ir al estado 82
+
+    local  ir al estado 143
+
+
+Estado 115
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   82 sentAsig: left_part ASIG expresion . PYC
+
+    PYC    desplazar e ir al estado 144
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+
+Estado 116
+
+   65 array: LCOR expresion RCOR .
+
+    $default  reduce usando la regla 65 (array)
+
+
+Estado 117
+
+   46 sentProc: ID LPAR list_params RPAR . PYC
+
+    PYC  desplazar e ir al estado 145
+
+
+Estado 118
+
+   49 params: params COMA . param
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    param      ir al estado 146
+    expresion  ir al estado 93
+
+
+Estado 119
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   64 array: array LCOR expresion . RCOR
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+    RCOR   desplazar e ir al estado 147
+
+
+Estado 120
+
+   66 condicion: condicion . OR condicion
+   67          | condicion . AND condicion
+   74          | NOT condicion .
+
+    $default  reduce usando la regla 74 (condicion)
+
+
+Estado 121
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   57          | LPAR expresion . RPAR
+   68 condicion: expresion . EQUAL expresion
+   69          | expresion . DISTINCT expresion
+   70          | expresion . GT expresion
+   71          | expresion . LT expresion
+   72          | expresion . GTE expresion
+   73          | expresion . LTE expresion
+
+    EQUAL     desplazar e ir al estado 123
+    DISTINCT  desplazar e ir al estado 124
+    LT        desplazar e ir al estado 125
+    GT        desplazar e ir al estado 126
+    LTE       desplazar e ir al estado 127
+    GTE       desplazar e ir al estado 128
+    MAS       desplazar e ir al estado 108
+    MENOS     desplazar e ir al estado 109
+    MUL       desplazar e ir al estado 110
+    DIV       desplazar e ir al estado 111
+    MOD       desplazar e ir al estado 112
+    RPAR      desplazar e ir al estado 137
+
+
+Estado 122
+
+   66 condicion: condicion . OR condicion
+   67          | condicion . AND condicion
+   75          | LPAR condicion . RPAR
+
+    OR    desplazar e ir al estado 129
+    AND   desplazar e ir al estado 130
+    RPAR  desplazar e ir al estado 148
+
+
+Estado 123
+
+   68 condicion: expresion EQUAL . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 149
+
+
+Estado 124
+
+   69 condicion: expresion DISTINCT . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 150
+
+
+Estado 125
+
+   71 condicion: expresion LT . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 151
+
+
+Estado 126
+
+   70 condicion: expresion GT . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 152
+
+
+Estado 127
+
+   73 condicion: expresion LTE . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 153
+
+
+Estado 128
+
+   72 condicion: expresion GTE . expresion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    LPAR    desplazar e ir al estado 80
+
+    expresion  ir al estado 154
+
+
+Estado 129
+
+   66 condicion: condicion OR . condicion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 97
+    condicion  ir al estado 155
+
+
+Estado 130
+
+   67 condicion: condicion AND . condicion
+
+    ID      desplazar e ir al estado 78
+    NUMERO  desplazar e ir al estado 79
+    NOT     desplazar e ir al estado 95
+    LPAR    desplazar e ir al estado 96
+
+    expresion  ir al estado 97
+    condicion  ir al estado 156
+
+
+Estado 131
+
+   76 sentIf: IF LPAR condicion RPAR . bloqueOSentencia sentElse
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    RETURN  desplazar e ir al estado 55
+    LKEY    desplazar e ir al estado 157
+
+    sentencia         ir al estado 158
+    sentReturn        ir al estado 61
+    sentProc          ir al estado 62
+    sentIf            ir al estado 63
+    bloqueOSentencia  ir al estado 159
+    sentWhile         ir al estado 64
+    sentAsig          ir al estado 65
+    left_part         ir al estado 66
+    sentPutw          ir al estado 67
+    sentPuts          ir al estado 68
+    sentBreak         ir al estado 69
+
+
+Estado 132
+
+   81 sentWhile: WHILE LPAR condicion RPAR . bloqueOSentencia
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    RETURN  desplazar e ir al estado 55
+    LKEY    desplazar e ir al estado 157
+
+    sentencia         ir al estado 158
+    sentReturn        ir al estado 61
+    sentProc          ir al estado 62
+    sentIf            ir al estado 63
+    bloqueOSentencia  ir al estado 160
+    sentWhile         ir al estado 64
+    sentAsig          ir al estado 65
+    left_part         ir al estado 66
+    sentPutw          ir al estado 67
+    sentPuts          ir al estado 68
+    sentBreak         ir al estado 69
+
+
+Estado 133
+
+   87 sentPuts: PRINT LPAR STRING RPAR . PYC
+
+    PYC  desplazar e ir al estado 161
+
+
+Estado 134
+
+   86 sentPutw: PRINT LPAR expresion RPAR . PYC
+
+    PYC  desplazar e ir al estado 162
+
+
+Estado 135
+
+   60 complemento: DOT ID .
+
+    $default  reduce usando la regla 60 (complemento)
+
+
+Estado 136
+
+   62 complemento: LPAR list_params . RPAR
+
+    RPAR  desplazar e ir al estado 163
+
+
+Estado 137
+
+   57 expresion: LPAR expresion RPAR .
+
+    $default  reduce usando la regla 57 (expresion)
+
+
+Estado 138
+
+   52 expresion: expresion . MAS expresion
+   52          | expresion MAS expresion .
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+
+    MUL  desplazar e ir al estado 110
+    DIV  desplazar e ir al estado 111
+    MOD  desplazar e ir al estado 112
+
+    $default  reduce usando la regla 52 (expresion)
+
+
+Estado 139
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   53          | expresion MENOS expresion .
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+
+    MUL  desplazar e ir al estado 110
+    DIV  desplazar e ir al estado 111
+    MOD  desplazar e ir al estado 112
+
+    $default  reduce usando la regla 53 (expresion)
+
+
+Estado 140
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   54          | expresion MUL expresion .
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+
+    $default  reduce usando la regla 54 (expresion)
+
+
+Estado 141
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   55          | expresion DIV expresion .
+   56          | expresion . MOD expresion
+
+    $default  reduce usando la regla 55 (expresion)
+
+
+Estado 142
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   56          | expresion MOD expresion .
+
+    $default  reduce usando la regla 56 (expresion)
+
+
+Estado 143
+
+   30 local_list: local_list COMA local .
+
+    $default  reduce usando la regla 30 (local_list)
+
+
+Estado 144
+
+   82 sentAsig: left_part ASIG expresion PYC .
+
+    $default  reduce usando la regla 82 (sentAsig)
+
+
+Estado 145
+
+   46 sentProc: ID LPAR list_params RPAR PYC .
+
+    $default  reduce usando la regla 46 (sentProc)
+
+
+Estado 146
+
+   49 params: params COMA param .
+
+    $default  reduce usando la regla 49 (params)
+
+
+Estado 147
+
+   64 array: array LCOR expresion RCOR .
+
+    $default  reduce usando la regla 64 (array)
+
+
+Estado 148
+
+   75 condicion: LPAR condicion RPAR .
+
+    $default  reduce usando la regla 75 (condicion)
+
+
+Estado 149
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   68 condicion: expresion EQUAL expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 68 (condicion)
+
+
+Estado 150
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   69 condicion: expresion DISTINCT expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 69 (condicion)
+
+
+Estado 151
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   71 condicion: expresion LT expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 71 (condicion)
+
+
+Estado 152
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   70 condicion: expresion GT expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 70 (condicion)
+
+
+Estado 153
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   73 condicion: expresion LTE expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 73 (condicion)
+
+
+Estado 154
+
+   52 expresion: expresion . MAS expresion
+   53          | expresion . MENOS expresion
+   54          | expresion . MUL expresion
+   55          | expresion . DIV expresion
+   56          | expresion . MOD expresion
+   72 condicion: expresion GTE expresion .
+
+    MAS    desplazar e ir al estado 108
+    MENOS  desplazar e ir al estado 109
+    MUL    desplazar e ir al estado 110
+    DIV    desplazar e ir al estado 111
+    MOD    desplazar e ir al estado 112
+
+    $default  reduce usando la regla 72 (condicion)
+
+
+Estado 155
+
+   66 condicion: condicion . OR condicion
+   66          | condicion OR condicion .
+   67          | condicion . AND condicion
+
+    AND  desplazar e ir al estado 130
+
+    $default  reduce usando la regla 66 (condicion)
+
+
+Estado 156
+
+   66 condicion: condicion . OR condicion
+   67          | condicion . AND condicion
+   67          | condicion AND condicion .
+
+    $default  reduce usando la regla 67 (condicion)
+
+
+Estado 157
+
+   79 bloqueOSentencia: LKEY . bloqueSentencias RKEY
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    RETURN  desplazar e ir al estado 55
+
+    $default  reduce usando la regla 34 (bloqueSentencias)
+
+    bloqueSentencias  ir al estado 164
+    sentencias        ir al estado 59
+    sentencia         ir al estado 60
+    sentReturn        ir al estado 61
+    sentProc          ir al estado 62
+    sentIf            ir al estado 63
+    sentWhile         ir al estado 64
+    sentAsig          ir al estado 65
+    left_part         ir al estado 66
+    sentPutw          ir al estado 67
+    sentPuts          ir al estado 68
+    sentBreak         ir al estado 69
+
+
+Estado 158
+
+   80 bloqueOSentencia: sentencia .
+
+    $default  reduce usando la regla 80 (bloqueOSentencia)
+
+
+Estado 159
+
+   76 sentIf: IF LPAR condicion RPAR bloqueOSentencia . sentElse
+
+    ELSE  desplazar e ir al estado 165
+
+    $default  reduce usando la regla 78 (sentElse)
+
+    sentElse  ir al estado 166
+
+
+Estado 160
+
+   81 sentWhile: WHILE LPAR condicion RPAR bloqueOSentencia .
+
+    $default  reduce usando la regla 81 (sentWhile)
+
+
+Estado 161
+
+   87 sentPuts: PRINT LPAR STRING RPAR PYC .
+
+    $default  reduce usando la regla 87 (sentPuts)
+
+
+Estado 162
+
+   86 sentPutw: PRINT LPAR expresion RPAR PYC .
+
+    $default  reduce usando la regla 86 (sentPutw)
+
+
+Estado 163
+
+   62 complemento: LPAR list_params RPAR .
+
+    $default  reduce usando la regla 62 (complemento)
+
+
+Estado 164
+
+   79 bloqueOSentencia: LKEY bloqueSentencias . RKEY
+
+    RKEY  desplazar e ir al estado 167
+
+
+Estado 165
+
+   77 sentElse: ELSE . bloqueOSentencia
+
+    ID      desplazar e ir al estado 50
+    IF      desplazar e ir al estado 51
+    WHILE   desplazar e ir al estado 52
+    PRINT   desplazar e ir al estado 53
+    BREAK   desplazar e ir al estado 54
+    RETURN  desplazar e ir al estado 55
+    LKEY    desplazar e ir al estado 157
+
+    sentencia         ir al estado 158
+    sentReturn        ir al estado 61
+    sentProc          ir al estado 62
+    sentIf            ir al estado 63
+    bloqueOSentencia  ir al estado 168
+    sentWhile         ir al estado 64
+    sentAsig          ir al estado 65
+    left_part         ir al estado 66
+    sentPutw          ir al estado 67
+    sentPuts          ir al estado 68
+    sentBreak         ir al estado 69
+
+
+Estado 166
+
+   76 sentIf: IF LPAR condicion RPAR bloqueOSentencia sentElse .
+
+    $default  reduce usando la regla 76 (sentIf)
+
+
+Estado 167
+
+   79 bloqueOSentencia: LKEY bloqueSentencias RKEY .
+
+    $default  reduce usando la regla 79 (bloqueOSentencia)
+
+
+Estado 168
+
+   77 sentElse: ELSE bloqueOSentencia .
+
+    $default  reduce usando la regla 77 (sentElse)
