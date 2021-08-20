@@ -146,7 +146,35 @@ base
 arreglo
     : LCOR NUMERO RCOR  arreglo
     {
-        // TODO(64) Agregar las acciones semánticas para ingresar un tipo array
+                $$ = $4;
+					if($2.tipo == 0){
+						if($2.numeroCaracter != ""){
+							
+							TYP *tipo4 = init_type();
+							tipo4->id = posicionTablaTipo + 1;
+							strcpy(tipo4->nombre, "array");
+							tipo4->tam =  valorArreglo * atoi($2.numeroCaracter);
+							tipo4->tb.is_est = 0;
+							tipo4->tb.tipo.tipo = posicionTablaTipo;
+							valorArreglo = tipo4->tam;
+							posicionTablaTipo = tipo4->id;
+
+							append_type(generalTipos, tipo4);
+
+							pop_tst(stackTipos);
+							
+							push_tst(stackTipos, generalTipos);
+
+
+						}else{
+							yyerror("El numero del arreglo no es compatible");
+						}
+						
+
+					}else{
+						yyerror("El numero del arreglo no es compatible");
+					}
+					
     } 
     | 
     %empty
