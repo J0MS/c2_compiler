@@ -263,9 +263,23 @@ args
 arg
     : 
     base ID {
-        // TODO(85) validar que el id no se ha declarado
-        // TODO(85) Hacer arg.type = base.type
-    }
+                {
+                    $$ = $1;
+                        if(!getID(&generalSimbolos, $2)){
+                            SYM s;
+                            strcpy(s.id, $2);
+                            s.tipo = $1;
+                            s.dir = dirGBL;
+                            strcpy(s.id, "arg");
+                            s.numArgumentos = 0;
+                            dirGBL = dirGBL + s.dir;
+                            insertar(&generalSimbolos, s);
+			
+                        }else{
+                            yyerror("El id ya fue declarado en la tabla de simbolos");
+                        }
+            };
+        }
     ;
 
 local_decls
