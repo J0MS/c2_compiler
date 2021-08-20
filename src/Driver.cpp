@@ -329,10 +329,49 @@ void C0::Driver::addQuad(Quad q) {
 }
 
 // TODO(54) Programar la funcion miembro que envuelve a getName de la tabla de tipos
+   int getName(SYMTAB *st, char *id){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            return st->syms[i].name;
+        }
+    return -1;
+    }
 // TODO(55) Programar la funcion miembro que envuelve a getTam de la tabla de tipos
+    int getTam(TYPTAB *t, int id){
+        TYP *i = t->head;
+        while(i != NULL){
+            if(i->id == id){
+			return i->tam;
+            }
+            i = i->next;
+        }
+        return -1;
+    }
 // TODO(56) Programar la funcion miembro que envuelve a getTipoBase de la tabla de tipos
+    TYPTAB getTipoBase(TYPTAB *t, int id){
+	TYP *i = t->head;
+	while(i != NULL){
+		if(i->id == id){
+			return i->tb;
+		}
+		i = i->next;
+        }
+
+    } 
 // TODO(57) Programar la funcion miembro que envuelve a getNumImtes de la tabla de tipos
+
+
 // TODO(58) Programar la funcion miembro que envuelve a getBase de la tabla de tipos
+    int getBase(SYMTAB *st, char *id){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            return st->syms[i].base;
+    }
+    return -1;
+    }
+
 // TODO(59) Programar la funcion miembro que envuelve a setBase de la tabla de tipos   
 
 void C0::Driver::variable(string id){
