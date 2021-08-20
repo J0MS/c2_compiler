@@ -27,7 +27,34 @@ public:
 
    void init();
    //TODO(63) Definir el prototipo de una función que envuelva un push a tstack
+   
+    void push_tstack(TSTACK *s, TYPTAB *tt){
+        if(s->top != NULL){
+            TYPTAB *cabeza = s->top;
+            cabeza->next = tt;
+            s->top = tt;
+        }else{
+            s->top = tt;
+            s->tail = tt;
+            tt->next = NULL;
+        }
+
+    }  
+   
    //TODO(64) Definir el prototpio de una función que retorne un Table* al hacer pop a tstack
+   TYPTAB pop_tst(TSTACK *s){
+	if(s->top != s->tail){
+		TYPTAB *cabeza = s->top;
+		TYPTAB *nuevaCabeza = cabeza->next;
+		s->top = nuevaCabeza;
+		return *cabeza;
+        }else{
+		TYPTAB *c = s->top;
+		s->top = NULL;
+		s->tail = NULL;
+		return *c;
+        }	
+    } 
    /*************************************************************************/
    /*     FUNCIONES QUE ENVUELVEN EL FUNCIONAMIENTO DE LA TABLA DE SÍMBOLOS */
    /*************************************************************************/
@@ -43,10 +70,47 @@ public:
    /*     FUNCIONES QUE ENVUELVEN EL FUNCIONAMIENTO DE LA TABLA DE TIPOS */
    /*************************************************************************/
    // TODO(32) Agregar el prototipo para la funcion que envuelve a getName de la tabla de tipos
+   int getName(SYMTAB *st, char *id){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            return st->syms[i].name;
+        }
+    return -1;
+    }
    // TODO(33) Agregar el prototipo para la funcion que envuelve a getTam de la tabla de tipos
+    int getTam(TYPTAB *t, int id){
+        TYP *i = t->head;
+        while(i != NULL){
+            if(i->id == id){
+			return i->tam;
+            }
+            i = i->next;
+        }
+        return -1;
+    }
+   
    // TODO(34) Agregar el prototipo para la funcion que envuelve a getTipoBase de la tabla de tipos
+    TYPTAB getTipoBase(TYPTAB *t, int id){
+	TYP *i = t->head;
+	while(i != NULL){
+		if(i->id == id){
+			return i->tb;
+		}
+		i = i->next;
+        }
+
+    } 
    // TODO(35) Agregar el prototipo para la funcion que envuelve a getNumImtes de la tabla de tipos
    // TODO(36) Agregar el prototipo para la funcion que envuelve a getBase de la tabla de tipos
+    int getBase(SYMTAB *st, char *id){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            return st->syms[i].base;
+    }
+    return -1;
+    }
    // TODO(37) Agregar el prototipo para la funcion que envuelve a setBase de la tabla de tipos
    // TODO(69)  Agregar el prototipo para una función que agregue un tipo nuevo struct recibe: "struct", Table *t
 
@@ -94,6 +158,7 @@ private:
    // TODO(28) Borrar la definición de Table
    C0::Table *table = nullptr;   
    // TODO(29) Añadir un nuevo miembro llamado tstack de tipo Stack
+   C0::Table tstack = nullptr:
    void parse_helper( std::istream &stream );
    C0::Parser  *parser  = nullptr;
    C0::Scanner *scanner = nullptr;
@@ -113,9 +178,11 @@ public:
    int current_type;
    vector<string> strings;
    // TODO(30) Agregar una variable entera llamada gType
+   int gType
    // TODO(31) Agregar una variable entera llamada gBase
+   int gBase
    // TODO(38) Crear una variable miembro llamada dirStack de tipo apuntador a PilaCount
-   
+   PilaCount * dirStack
 };
 }
 
