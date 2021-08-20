@@ -387,6 +387,25 @@ void C0::Driver::variable(string id){
 }
 
 
+void C0::Driver::decl_struct(string){
+    if(!tstack->top() ->isGlobal && tstack->top()->isIn(Id) ){
+        if(tstack->top()->getClas(id) == "struct"){
+            return tstack->top()->getType(id).type;
+        }else
+            parser -> error (id + "No es una estructura")
+    }else if(tstack->global()->isIn(id)){
+         if(tstack->top()->getClas(id) == "struct"){
+            return tstack -> global()->getType(id).type;
+         }else
+             parser -> error(id + "No es una estructura") 
+             
+    }else{
+        parser -> error(id + "No existe") 
+    }
+    
+    
+}
+
 //TODO(65) Programar la función miembro que envuelva un push a tstack
 //TODO(66) Programar la función miembro que retorne un Table* al hacer pop a tstack
 //TODO(70) Programar la función miembro que añade el tipo struct a la tabla de tipos
