@@ -72,7 +72,7 @@ using namespace std;
 
 
 
-//TODO (89) definir el no terminal list_param y params como vector<int>*
+//TODO (89) definir el no terminal list_param y params como vector<int>* ----Definido
 //TODO(95) definir el no terminarl param como int
 %%
 program 
@@ -122,31 +122,112 @@ var
     }
     ;
 
-type
+tipo
     : 
-    base  /* $1 */
-    { /*$2*/
-        driver.basico = $1;
-    }
-    arreglo /*$3*/
-    { /* $4 */
-        $$ =  $3;
-    }
+    base  comp_arr
+    |
+    struct id
     ;
 
+comp_arr:
+    LCOR NUMERO RCOR comp_arr
+    |
+    %empty
+    ;
+    
 base
-    : 
-    INT 
-    {
-        $$ = 1;
-    }
-    | 
+    :
     VOID
-    {
-        $$= 0;
-    }
+    |
+    CHAR
+    |
+    INT
+    |
+    FLOAT
+    |
+    DOUBLE
+    ;
+    
+decl_struct
+    :
+    STRUCT LKEY body_struct RKEY list_var PYC
+    ;
+    
+decl_struct
+    :
+    STRUCT ID LKEY body_struct RKEY list_var PYC
+    ;
+    
+
+body_struct:
+    body_struct decl_local
+    |
+    decl_local
+    ;
+    
+decl_fun:
+    ID LCOR list_params RCOR LKEY decl_locales bloqueSentencias RKEY
+    ;
+    
+list_params:
+    params
+    |
+    %empty
     ;
 
+params:
+    param COMA param
+    |
+    param
+    ;
+
+param:
+    type_param ID
+    ;
+    
+type_param:
+    base parte_array
+    |
+    base
+    |
+    struct id
+    ;
+    
+parte_array:
+    parte_array LCOR numero RCOR
+    |
+    LCOR RCOR
+    ;
+    
+decl_locales:
+    decl_locales decl_local
+    |
+    %empty
+    ;
+    
+decl_local:
+    decl_var
+    |
+    decl_struct
+    ;
+    
+decl_var:
+    tipo list_var;
+
+bloqueSentencias:
+    sentencias
+    |
+    %empty
+    ;
+    
+sentencias:
+    sentencias sentencia
+    |
+    sentencia
+    ;
+    
+
+    
 arreglo
     : LCOR NUMERO RCOR  arreglo
     {
@@ -235,6 +316,18 @@ function
         // TODO](77) En caso de no estar agregarlo
         // TODO(78) Agregar que es tipo func, su tipo de retorno, y su lista de paramétros
         // Almacenada en list_args
+        if(!getID(&generalSimbolos, $3)){
+					SYM s;
+		            strcpy(s.id, $3);
+			        s.tipo = tipoGBL;
+			        s.dir = dirGBL;
+			        strcpy(s.var, "def");
+			        s.numArgumentos = $5.num;
+			        dirGBL = dirGBL + s.dir;
+			        insertar(&generalSimbolos, s);
+        }else{
+					yyerror("El id de la funcion ya existe");
+        }
     }
     ;
 
@@ -242,11 +335,16 @@ list_args
     : args
     {
         // TOTOD(80) Hacer que list_args.lista =  args.lista
+        strcpy($$.lista, $1.lista);
+        $$.num = $1.num + 1;
     }
     | 
     %empty
     {
         // TODO(81) Hacer list_args.lista = nullptr
+        char nuevo[1000];
+        strcpy($$.lista, nuevo);
+        $$.num = $1;
     }
     ;
 
@@ -256,11 +354,24 @@ args
     {
         // TODO(82) Agregar arg.type a args1.lista
         // TODO(83) Hacer args.lista = args1.lista
-    }
+    $$ = $1;
+    if(!getID(&generalSimbolos, $2)){
+			SYM s;
+            strcpy(s.id, $2);
+	        s.tipo = $1;
+	        s.dir = dirGBL;
+	        strcpy(s.id, "arg");
+	        s.numArgumentos = 0;
+	        dirGBL = dirGBL + s.dir;
+	        insertar(&generalSimbolos, s);
+    }else{
+			yyerror("El id ya existe");
+		}
     | 
     arg
     {
         // TODO(84) Agregar arg.type a args.lista
+    }
     }
     ;
 
@@ -357,15 +468,35 @@ sentProc
     : 
     ID LPAR list_params RPAR PYC
     ;
+    
+list_args
+    :
+    args
+    |
+    %empty
+    ;
+
+args:
+    args COMA arg
+    |
+    arg
+    |
+    expresion
+    ;
+    
 
 list_params
     : 
     params{
-        // TODO(90) Similar a list_args-> args
+            strcpy($$.lista, "");
+            sprintf($$.lista, "%d", $3.tipo);
+            $$.num = $1.num + 1;
     }
     | 
     %empty{
-        // TODO(91) Similar a list_args-> epsilon
+            strcpy($$.lista, "");
+            sprintf($$.lista, "%d", $1.tipo);
+            $$.num = 1;
     }
     ;
 
@@ -374,11 +505,15 @@ params
     params COMA param
     {
         // TODO(92) Similar a args-> args, arg
+        strcpy($$.lista,$1.lista);
+        $$.num = $1.num;
     }
     | 
     param
     {
         // TODO(93) Similar a args-> arg
+        strcpy($$.lista, "NULO");
+        $$.num = 0;
     }
     ;
 
@@ -404,17 +539,19 @@ expresion
     LPAR expresion RPAR
     | 
     NUMERO
+    |
+    CARACTER
     |  
     ID complemento
     ;
 
 complemento
     : 
-    DOT ID
+    comp_struct
     |
     array
     |
-    LPAR list_params RPAR
+    LPAR list_params RPAR PYC
     |
     %empty
     ;
@@ -478,6 +615,32 @@ sentWhile
     bloqueOSentencia    
     ;
 
+sentSwitch
+    :
+    SWITCH LPAR expresion RPAR LCOR body_switch RCOR
+    ;
+
+body_switch:
+    caso body_switch
+    |
+    predeterminado
+    |
+    %empty
+    ;
+    
+caso:
+    case expresion : sentencias
+    ;
+    
+predeterminado:
+    default :sentencias
+    ;
+    
+sentFor:
+    FOR LPAR sentAsig PYC CONDICION PYC sentAsig RPAR bloqueOSentencia
+    ;
+    
+ 
 sentAsig
     : 
     left_part ASIG expresion PYC
@@ -492,6 +655,14 @@ left_part
     ID DOT ID
     ;
 
+comp_struct
+    :
+    comp_struct . ID
+    |
+    %empty
+    ;
+    
+    
 sentPutw
     :
     PRINT LPAR expresion
@@ -509,6 +680,12 @@ sentBreak
     PYC
     ;
 
+bloqueOSentencia:
+    LCOR bloqueSentencias RCOR
+    |
+    sentencia
+    ;
+    
 lista_arg : lista_arg COMA arg 
 			{
 			strcpy($$.lista, $1.lista);
@@ -546,6 +723,43 @@ tipo_arg : base param_arr
 			baseGBL = $1;
 
 		};    
+		
+
+arreglo: LCOR expresion RCOR 
+		{
+			strcpy($$.dir,$2.numeroCaracter);
+			$$.tipo = $2.tipo;
+		}
+		| arreglo LCOR expresion RCOR
+		{
+			strcpy($$.dir,$3.numeroCaracter);
+			$$.tipo = tipoGBL;
+		};
+
+parametros : lista_param 
+			{
+				strcpy($$.lista,$1.lista);
+				$$.num = $1.num;
+			}
+			| 
+			{
+				strcpy($$.lista, "NULO");
+				$$.num = 0;
+			};
+
+
+lista_param : lista_param COMA expresion
+			{
+				strcpy($$.lista, "");
+				sprintf($$.lista, "%d", $3.tipo);
+				$$.num = $1.num + 1;
+			} 
+			| expresion
+			{
+				strcpy($$.lista, "");
+				sprintf($$.lista, "%d", $1.tipo);
+				$$.num = 1;
+			};
     
     
 %%

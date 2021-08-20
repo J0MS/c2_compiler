@@ -198,6 +198,8 @@ cadena \"([\x20-\x21\x23-\xFE])*\"
                cout<<"ERROR LÉXICO: "<<yytext << endl;
             }
 }
+
+
 <COMENTARIO>{
 [*/]  {}
 [^*/] {}
