@@ -113,6 +113,17 @@ public:
     }
    // TODO(37) Agregar el prototipo para la funcion que envuelve a setBase de la tabla de tipos
    // TODO(69)  Agregar el prototipo para una función que agregue un tipo nuevo struct recibe: "struct", Table *t
+   int getDir(string id);   
+   void setType(string id, SymbolType type);
+   SymbolType getType(string id);
+   void setVar(string id, string var);
+   string getVar(string id);
+   void setArgs(string id, vector<int> args);
+   int addType(string name, int items, int base);
+   int addType(string name, Table *t);
+   void push();
+   void pop();
+   
 
    /****************************************************/
    /*     FUNCIONES QUE REALIZAN EL ANÁLISIS SEMÁNTICO */
@@ -133,6 +144,10 @@ public:
    void writew(Expresion e);
    void writes(string s, int c);
    void variable(string id);
+   void variable(string id, string clase, vector<int> args);
+   int  decl_struct(string id);
+   void def_struct(string id);
+   void procedure(string id, vector<int> args);
    /***********************************************/
    /*     FUNCIONES QUE GENERAN CÓDIGO INTERMEDIO */
    /***********************************************/ 
@@ -141,6 +156,7 @@ public:
    void _while(Expresion e, int n);   
    void _goto(string label, int n);
    void _label(string label, int n);
+   void finFor(Expresion e);
    string newLabel(int n);
    string newTemp();
    void printCI();
