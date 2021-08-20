@@ -194,11 +194,11 @@ public:
    int current_type;
    vector<string> strings;
    // TODO(30) Agregar una variable entera llamada gType
-   int gType
+   int gType;
    // TODO(31) Agregar una variable entera llamada gBase
-   int gBase
+   int gBase;
    // TODO(38) Crear una variable miembro llamada dirStack de tipo apuntador a PilaCount
-   PilaCount * dirStack
+   PilaCount * dirStack;
 };
 }
 

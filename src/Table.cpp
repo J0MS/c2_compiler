@@ -112,12 +112,71 @@ vector<C0::Symbol> C0::Table::getSymTab(){
 }
 
 // TODO(16) Programar addType para que reciba un nombre: string, tam:int
+
 // TODO(17) Programar addType para que reciba un nombre: string, numeroItems:int, tipoBase:int
 // TODO(18) Programar getName para tabla de tipos, recibe id:int
+   int getName(TYPTAB *t, int id){
+        TYP *i = t->head;
+        while(i != NULL){
+            if(i->id == id){
+			return i->name;
+            }
+            i = i->next;
+        }
+        return -1;
+    }
 // TODO(19) Programar getNumItems, recibe id:int
 // TODO(20) Programar getTam, recibe id:int
+    int getTam(TYPTAB *t, int id){
+        TYP *i = t->head;
+        while(i != NULL){
+            if(i->id == id){
+			return i->tam;
+            }
+            i = i->next;
+        }
+        return -1;
+    }
 // TODO(21) Programar getTipoBase, recibe id:int
+    TYPTAB getTipoBase(TYPTAB *t, int id){
+	TYP *i = t->head;
+	while(i != NULL){
+		if(i->id == id){
+			return i->tb;
+		}
+		i = i->next;
+        }
+
+    } 
 // TODO(22) Programar getBase, recibe id:int
+    int getBase(SYMTAB *st, char *id){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            return st->syms[i].base;
+    }
+    return -1;
+    }
+
 // TODO(23) Programar setBase, recibe id:int y t:*Tabl
+    void setBase( char *id, SYMTAB *st){
+    int i;
+    for(i =0; i< st->num; i++){
+        if(strcmp(st->syms[i].id, id) == 0)
+            st->syms[i].base = id;
+    }
+    return -1;
+    }
+
 // TODO(24) Programar getTypes, retorna un apuntador a la tabla de tipos
-// TODO(25) Programar getSyms, retorna un pauntador a la tabla de súmb
+    TYPTAB getTypes(){
+	return TYPTAB *t;
+
+    }
+
+// TODO(25) Programar getSyms, retorna un pauntador a la tabla de súmb  
+    SYMTAB getSyms(){
+	return SYMTAB *t;
+
+    }
+
