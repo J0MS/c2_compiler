@@ -67,7 +67,11 @@ using namespace std;
 %locations
 %start program
 %type<int> type base arreglo
-//TODO (79) definir el no terminal list_args y args como vector<int>*
+//TODO (79) definir el no terminal list_args y args como vector<int>* --- Definido
+
+
+
+
 //TODO (89) definir el no terminal list_param y params como vector<int>*
 //TODO(95) definir el no terminarl param como int
 %%
@@ -505,6 +509,45 @@ sentBreak
     PYC
     ;
 
+lista_arg : lista_arg COMA arg 
+			{
+			strcpy($$.lista, $1.lista);
+			$$.num = $1.num + 1;
+			}
+			| arg
+			{
+				char nuevo[1000];
+				strcpy($$.lista, nuevo);
+				$$.num = $1;
+			};
+
+arg : tipo_arg ID
+	{
+		$$ = $1;
+		if(!getID(&generalSimbolos, $2)){
+			SYM s;
+            strcpy(s.id, $2);
+	        s.tipo = $1;
+	        s.dir = dirGBL;
+	        strcpy(s.id, "arg");
+	        s.numArgumentos = 0;
+	        dirGBL = dirGBL + s.dir;
+	        insertar(&generalSimbolos, s);
+
+			
+		}else{
+			yyerror("El id ya fue declarado");
+		}
+	};
+
+tipo_arg : base param_arr
+		{	
+			$$ = $2;
+			baseGBL = $1;
+
+		};    
+    
+    
 %%
 
 void C0::Parser::error( const location_type &l, const std::string &err_message )
